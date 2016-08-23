@@ -6,14 +6,24 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kapilgp/bulk-email-verifier.git"
+  },
   "keywords": [
     "bulk",
     "email",
-    "verifier"
+    "verifier",
+    "bulk domain verification",
+    "bulk email verification of single domain"
   ],
   "author": "Kapil Gupta <kapil.gp@gmail.com>",
   "license": "ISC",
   "devDependencies": {
     "dns": "^0.2.2"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/kapilgp/bulk-email-verifier/issues"
+  },
+  "homepage": "https://github.com/kapilgp/bulk-email-verifier#readme"
 }
