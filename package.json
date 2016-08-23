@@ -1,0 +1,19 @@
+{
+  "name": "bulk-email-verifier",
+  "version": "1.0.0",
+  "description": "Bulk Email Verifier",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "bulk",
+    "email",
+    "verifier"
+  ],
+  "author": "Kapil Gupta <kapil.gp@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "dns": "^0.2.2"
+  }
+}
