@@ -1,11 +1,16 @@
 /**
- * Domain MX Record Verification
+ * Domain MX Record Verification Library
+ * @created  August 23, 2016
+ * @author Kapil Gupta <kapil.gp@gmail.com>
+ * @license https://raw.githubusercontent.com/kapilgp/bulk-email-verifier/master/LICENSE
  */
 
-let dns = require('dns');
+
+//Require Modules
+const dns = require('dns');
 
 let domainsStats = [];
-let _isValidDomainMX = (domain) => {
+const _isValidDomainMX = (domain) => {
 	// Get the MX Records to find the SMTP server
 	return new Promise((resolve, reject) => {
 	    
@@ -25,9 +30,11 @@ let _isValidDomainMX = (domain) => {
 	});
 }
 
+//Export Module
 module.exports = {
 	
 	verifyDomainMX: (domains) => {
+		domainsStats = [];
 		return domains.reduce((promise, domain) => {
 	    	return promise.then(() => {
 	    		//console.log(domain);

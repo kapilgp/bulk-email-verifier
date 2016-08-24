@@ -1,21 +1,27 @@
-var dns = require('dns');
+/**
+ * Library for Email Verification for single domain
+ * @created  August 23, 2016
+ * @author Kapil Gupta <kapil.gp@gmail.com>
+ * @license https://raw.githubusercontent.com/kapilgp/bulk-email-verifier/master/LICENSE
+ */
 
 
+//Require Modules
+const dns = require('dns');
 
-var emailRcpt = function(email, socket) {
+const emailRcpt = (email, socket) => {
 
 	setTimeout(function (email) {
-		socket.write("RCPT TO:<" + email + ">\r\n",function() {
+		socket.write("RCPT TO:<" + email + ">\r\n", () => {
 			//console.log("RCPT TO" + email); 
 		});
 	}.bind(this, email), 100);
 }
 
-
-var emailVerify = function(domain, emails, options, callback) {
+const emailVerify = (domain, emails, options, callback) => {
 	
-	var verified = [];
-	var unverified = [];
+	let verified = [];
+	let unverified = [];
 
 	// Default Values
     if (options && !options.port) options.port = 25;
@@ -26,19 +32,19 @@ var emailVerify = function(domain, emails, options, callback) {
 
 
 	// Get the MX Records to find the SMTP server
-    dns.resolveMx(domain, function(err, addresses) {
+    dns.resolveMx(domain, (err, addresses) => {
 
     	if (err || (typeof addresses === 'undefined')) {
             callback(err, null);
         } else if (addresses && addresses.length <= 0) {
-            console.log("No MX Records")
+            //console.log("No MX Records")
             callback(null, { success: false, info: "No MX Records" });
         } else {
     		
         	// Find the lowest priority mail server
-            var priority = 10000;
-            var index = 0;
-            for (var i = 0 ; i < addresses.length ; i++) {
+            let priority = 10000;
+            let index = 0;
+            for (let i = 0 ; i < addresses.length ; i++) {
                 if (addresses[i].priority < priority) {
                     priority = addresses[i].priority;
                     index = i;
@@ -46,21 +52,23 @@ var emailVerify = function(domain, emails, options, callback) {
             }
             
 
-            var smtp = addresses[index].exchange;
-            var stage = 0;
+            let smtp = addresses[index].exchange;
+            let stage = 0;
 
-            var net = require('net');
-            var socket = net.createConnection(options.port, smtp);
-            var success = false;
-            var response = "";
-            var completed = false;
-            var calledback = false;
-            var ended = false;
+            let net = require('net');
+            let socket = net.createConnection(options.port, smtp);
+            let success = false;
+            let response = "";
+            let completed = false;
+            let calledback = false;
+            let ended = false;
 
-            var email = "";
+            let email = "";
+
+            //Reverse Emails for popout, so sequence of email will be maintain 
             emails.reverse();
 
-            socket.on('data', function(data) {
+            socket.on('data', (data) => {
             	
                 response += data.toString();
                 completed = response.slice(-1) === '\n';
@@ -70,7 +78,9 @@ var emailVerify = function(domain, emails, options, callback) {
                         case 0: 
                         	if (response.indexOf('220') > -1 && !ended) {
                             	// Connection Worked
-                            	socket.write("EHLO "+options.fqdn+"\r\n",function() { stage++; response = ""; });
+                            	socket.write("EHLO "+options.fqdn+"\r\n", () => { 
+                                    stage++; response = ""; 
+                                });
 	                        } else{
 	                            socket.end();
 	                        }
@@ -79,7 +89,9 @@ var emailVerify = function(domain, emails, options, callback) {
                         case 1: 
                         	if (response.indexOf('250') > -1 && !ended) {
 	                            // Connection Worked
-	                            socket.write("MAIL FROM:<"+options.sender+">\r\n",function() { stage++; response = ""; });
+	                            socket.write("MAIL FROM:<"+options.sender+">\r\n", () => { 
+                                    stage++; response = ""; 
+                                });
 		                    } else{
                                 socket.end();
                             }
@@ -139,9 +151,9 @@ var emailVerify = function(domain, emails, options, callback) {
                             socket.end();
                     }
                 }
-            }).on('connect', function(data) {
+            }).on('connect', (data) => {
 
-            }).on('error', function(err) {
+            }).on('error', (err) => {
                 ended = true;
                 if( !calledback ){
                     calledback = true;
@@ -151,7 +163,7 @@ var emailVerify = function(domain, emails, options, callback) {
                         unverified: unverified 
                    	});
                 }
-            }).on('end', function() {
+            }).on('end', () => {
             	
                 ended = true;
                 if( !calledback ){
@@ -168,7 +180,7 @@ var emailVerify = function(domain, emails, options, callback) {
     });
 }
 
-
+//Export Module
 module.exports = {
 	emailVerify: emailVerify
 }

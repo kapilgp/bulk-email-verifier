@@ -2,7 +2,6 @@
 var verify = require('./index');
 
 var domains = [
-	'skyfut2.com',
 	'yahoomail.com', 
 	'yahoo.com', 
 	'gmail.com',
@@ -12,8 +11,16 @@ var domains = [
 
 verify.verifyDomainsMX(domains).then(function(res) {
     console.log('Domains Status: ', res);
-});
 
+    var domains = [
+		'google.com',
+		'twitter.com'
+	];
+
+	verify.verifyDomainsMX(domains).then(function(res) {
+	    console.log('Domains Status: ', res);
+	});
+});
 
 
 
