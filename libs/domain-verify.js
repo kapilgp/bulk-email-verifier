@@ -9,7 +9,9 @@
 //Require Modules
 const dns = require('dns');
 
-let domainsStats = [];
+let verified = [];
+let unverified = [];
+
 const _isValidDomainMX = (domain) => {
 	// Get the MX Records to find the SMTP server
 	return new Promise((resolve, reject) => {
@@ -18,14 +20,17 @@ const _isValidDomainMX = (domain) => {
 	    	//console.log(domain, err, addresses);
 
 	    	if (err || (typeof addresses === 'undefined')) {
-	            domainsStats[domain] = 'invalid';
+	            unverified.push(domain);
 	        } else if (addresses && addresses.length <= 0) {
-	            domainsStats[domain] = 'invalid - No MX Records';
+	        	unverified.push(domain);
+	        	console.log("invalid - No MX Records");
 	        } else {
-	        	domainsStats[domain] = 'valid';
+	        	//Valid Domain, MX Record Found
+	        	verified.push(domain);
 	        }
-
-	    	resolve(domainsStats);
+	        let stats = {verified: verified, unverified: unverified};
+	        
+	    	resolve(stats);
 	    });	
 	});
 }
@@ -34,7 +39,8 @@ const _isValidDomainMX = (domain) => {
 module.exports = {
 	
 	verifyDomainMX: (domains) => {
-		domainsStats = [];
+		verified = [];
+		unverified = [];
 		return domains.reduce((promise, domain) => {
 	    	return promise.then(() => {
 	    		//console.log(domain);
