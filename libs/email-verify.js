@@ -57,7 +57,6 @@ const emailVerify = (domain, emails, options, callback) => {
 
             let net = require('net');
             let socket = net.createConnection(options.port, smtp);
-            let success = false;
             let response = "";
             let completed = false;
             let calledback = false;
@@ -113,9 +112,6 @@ const emailVerify = (domain, emails, options, callback) => {
 
                         case 3: 
                         	if (response.indexOf('250') > -1 || (options.ignore && response.indexOf(options.ignore) > -1)) {
-                                // RCPT Worked
-                                success = true;
-
                                 //Push into verified list
                                 verified.push(email);
                                 //console.log(response + ' : ' +email);
@@ -169,7 +165,7 @@ const emailVerify = (domain, emails, options, callback) => {
                 if( !calledback ){
                     calledback = true;
                     callback(null, {
-                        success: success,
+                        success: true,
                         verified: verified,
                         unverified: unverified 
                     });

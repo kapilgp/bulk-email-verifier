@@ -1,6 +1,6 @@
 {
   "name": "bulk-email-verifier",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Bulk Email Verifier",
   "main": "index.js",
   "repository": {
